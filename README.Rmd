@@ -13,43 +13,79 @@ knitr::opts_chunk$set(
 )
 ```
 
-# plotJSON
+# plotATLAS
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of plotJSON is to plot Sequencing Error Covariate data from the *__RGInfo.json produced from the ATLAS (Analysis Tools for Low-coverage and Ancient Samples) pipleline. 
+The goal of plotATLAS is to plot data from various outputs produced from the ATLAS (Analysis Tools for Low-coverage and Ancient Samples) pipleline. 
 
 ## Installation
 
-You can install the development version of plotJSON from [GitHub](https://github.com/) with:
+You can install the development version of plotJSON from [GitHub](https://github.com/pandeyaparna2022/plotATLAS) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("pandeyaparna2022/plotJSON")
+devtools::install_github("pandeyaparna2022/plotATLAS")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(plotJSON)
-## basic example code
+Alternatively you can also use the `pak` package:
+```{r install_pak, eval = FALSE}
+# install.packages("pak")
+pak::pak("pandeyaparna2022/plotATLAS")
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
+Or the `remotes` package:
+```{r install_remotes, eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("pandeyaparna2022/plotATLAS", build_vignettes = TRUE)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+## Dependencies
+- rjson
 
-You can also embed plots, for example:
+## Usage
 
-```{r pressure, echo = FALSE}
-plot(pressure)
+### Plot postmortem damage
+
+```{r usage PMD}
+library(plotATLAS)
+
+# Assign path to the input file e.g path = "path/to/folder/ATLAS_data_RGInfo.json"
+
+path <- list_example("test.json") #here the path is the internal test data provided with the package
+
+# define readGroups if you wish to plot only certain readGroups
+readGroups <- c("ERR8666961", "ERR8684188")
+
+# define Side 5, 3 or both. Default is both.
+side = 5
+
+# plot PMD
+plot_PMD(path, side, readGroups=readGroups)
+plot_PMD(path, readGroups=readGroups)
+plot_PMD(path)
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+### Plot Sequencing Error Covariates
+```{r usage covariates}
+library(plotATLAS)
+
+# Assign path to the input file e.g path = "path/to/folder/ATLAS_data_RGInfo.json"
+path <- list_example("test.json")
+# define readGroups if you wish to plot only certain readGroups
+readGroups <- c("ERR8666961", "ERR8684188")
+#Plot covariates
+Covariates = list('quality','position','context','fragmentLength','mappingQuality','rho')
+for (i in Covariates){
+plot_SeqError_covariate(path,i,1);
+
+}
+```
+### Plot BAMDiagnostic Histograms
+```{r usage BAMDiagnostics}
+library(plotATLAS)
+
+```
+
+

@@ -1,12 +1,14 @@
-Package: plotJSON
-Title: Access and plot data from *_RGInfo.json output of ATLAS (Analysis Tools for Low-coverage and Ancient Samples) pipleline 
+Package: plotATLAS
+Title: Access and plot data from outputs of ATLAS (Analysis Tools for Low-coverage and Ancient Samples) pipleline 
 Version: 0.0.0.9000
 Authors@R: 
     person("Aparna", "pandey", , "aparna.pandey@students.unibe.ch", role = c("aut", "cre"))
-Description: It loads the *_RGInfo.json which is output of the ATLAS pipeline and 
-            plots various sequencing covariates including PMD, Quality, Context, etc.
+Description: It loads the various outputs of the ATLAS pipeline and 
+            plots the relevant data.
 Imports:
-    rjson
+    rjson,
+    ggplot2,
+    stringr
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

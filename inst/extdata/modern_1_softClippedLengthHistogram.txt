@@ -1,0 +1,3 @@
+readGroup	softClippedLength	count
+allReadGroups	0	499769574
+SRR14572852	0	499769574

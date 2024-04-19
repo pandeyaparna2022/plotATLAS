@@ -1,54 +1,98 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# plotJSON
+# plotATLAS
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of plotJSON is to plot Sequencing Error Covariate data from the
-\*\_\_RGInfo.json produced from the ATLAS (Analysis Tools for
-Low-coverage and Ancient Samples) pipleline.
+The goal of plotATLAS is to plot data from various outputs produced from
+the ATLAS (Analysis Tools for Low-coverage and Ancient Samples)
+pipleline.
 
 ## Installation
 
 You can install the development version of plotJSON from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/pandeyaparna2022/plotATLAS) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("pandeyaparna2022/plotJSON")
+devtools::install_github("pandeyaparna2022/plotATLAS")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+Alternatively you can also use the `pak` package:
 
 ``` r
-library(plotJSON)
-## basic example code
+# install.packages("pak")
+pak::pak("pandeyaparna2022/plotATLAS")
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Or the `remotes` package:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+# install.packages("remotes")
+remotes::install_github("pandeyaparna2022/plotATLAS", build_vignettes = TRUE)
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
+## Dependencies
 
-You can also embed plots, for example:
+- rjson
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+## Usage
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+### Plot postmortem damage
+
+``` r
+library(plotATLAS)
+
+# Assign path to the input file e.g path = "path/to/folder/ATLAS_data_RGInfo.json"
+
+path <- list_example("test.json") #here the path is the internal test data provided with the package
+
+# define readGroups if you wish to plot only certain readGroups
+readGroups <- c("ERR8666961", "ERR8684188")
+
+# define Side 5, 3 or both. Default is both.
+side = 5
+
+# plot PMD
+plot_PMD(path, side, readGroups=readGroups)
+```
+
+<img src="man/figures/README-usage PMD-1.png" width="100%" />
+
+``` r
+plot_PMD(path, readGroups=readGroups)
+```
+
+<img src="man/figures/README-usage PMD-2.png" width="100%" />
+
+``` r
+plot_PMD(path)
+```
+
+<img src="man/figures/README-usage PMD-3.png" width="100%" />
+
+### Plot Sequencing Error Covariates
+
+``` r
+library(plotATLAS)
+
+# Assign path to the input file e.g path = "path/to/folder/ATLAS_data_RGInfo.json"
+path <- list_example("test.json")
+# define readGroups if you wish to plot only certain readGroups
+readGroups <- c("ERR8666961", "ERR8684188")
+#Plot covariates
+Covariates = list('quality','position','context','fragmentLength','mappingQuality','rho')
+for (i in Covariates){
+plot_SeqError_covariate(path,i,1);
+
+}
+```
+
+<img src="man/figures/README-usage covariates-1.png" width="100%" /><img src="man/figures/README-usage covariates-2.png" width="100%" /><img src="man/figures/README-usage covariates-3.png" width="100%" /><img src="man/figures/README-usage covariates-4.png" width="100%" /><img src="man/figures/README-usage covariates-5.png" width="100%" /><img src="man/figures/README-usage covariates-6.png" width="100%" />
+\### Plot BAMDiagnostic Histograms
+
+``` r
+library(plotATLAS)
+```
