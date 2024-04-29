@@ -37,6 +37,9 @@ remotes::install_github("pandeyaparna2022/plotATLAS", build_vignettes = TRUE)
 ## Dependencies
 
 - rjson
+- ggplot2
+- rlang
+- stringr
 
 ## Usage
 
@@ -57,21 +60,15 @@ side = 5
 
 # plot PMD
 plot_PMD(path, side, readGroups=readGroups)
-```
-
-<img src="man/figures/README-usage PMD-1.png" width="100%" />
-
-``` r
+#> png 
+#>   2
 plot_PMD(path, readGroups=readGroups)
-```
-
-<img src="man/figures/README-usage PMD-2.png" width="100%" />
-
-``` r
+#> png 
+#>   2
 plot_PMD(path)
+#> png 
+#>   2
 ```
-
-<img src="man/figures/README-usage PMD-3.png" width="100%" />
 
 ### Plot Sequencing Error Covariates
 
@@ -90,9 +87,16 @@ plot_SeqError_covariate(path,i,1);
 }
 ```
 
-<img src="man/figures/README-usage covariates-1.png" width="100%" /><img src="man/figures/README-usage covariates-2.png" width="100%" /><img src="man/figures/README-usage covariates-3.png" width="100%" /><img src="man/figures/README-usage covariates-4.png" width="100%" /><img src="man/figures/README-usage covariates-5.png" width="100%" /><img src="man/figures/README-usage covariates-6.png" width="100%" />
+<img src="man/figures/README_usage_covariates_-1.png" width="100%" /><img src="man/figures/README_usage_covariates_-2.png" width="100%" /><img src="man/figures/README_usage_covariates_-3.png" width="100%" /><img src="man/figures/README_usage_covariates_-4.png" width="100%" /><img src="man/figures/README_usage_covariates_-5.png" width="100%" /><img src="man/figures/README_usage_covariates_-6.png" width="100%" />
 \### Plot BAMDiagnostic Histograms
 
 ``` r
 library(plotATLAS)
+# Assign path to the directory with input files e.g path = "path/to/folder/Bamdiagnostic"
+path <- list_example_folder()
+plot_BAMdiagnostic(path, output_directory_name = getwd())
+#> [1] "The following  1  file/s are excluded because either they are empty or do not align with the required format."
+#> [1] "C:\\Users\\pandapar\\AppData\\Local\\R\\win-library\\4.4\\plotATLAS\\extdata/modern_2_fragmentLengthHistogram.txt"
 ```
+
+<img src="man/figures/README_usage_BAMDiagnostics_-1.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-2.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-3.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-4.png" width="100%" />

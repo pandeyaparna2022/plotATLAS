@@ -6,13 +6,14 @@ Authors@R:
 Description: It loads the various outputs of the ATLAS pipeline and 
             plots the relevant data.
 Imports:
-    rjson,
+    rlang,
     ggplot2,
+    rjson,
     stringr
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 2.10)
 LazyData: true

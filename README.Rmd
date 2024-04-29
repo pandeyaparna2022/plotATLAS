@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
+  fig.path = "man/figures/README_",
   out.width = "100%"
 )
 ```
@@ -43,12 +43,15 @@ remotes::install_github("pandeyaparna2022/plotATLAS", build_vignettes = TRUE)
 
 ## Dependencies
 - rjson
+- ggplot2
+- rlang
+- stringr
 
 ## Usage
 
 ### Plot postmortem damage
 
-```{r usage PMD}
+```{r usage_PMD_}
 library(plotATLAS)
 
 # Assign path to the input file e.g path = "path/to/folder/ATLAS_data_RGInfo.json"
@@ -68,7 +71,7 @@ plot_PMD(path)
 ```
 
 ### Plot Sequencing Error Covariates
-```{r usage covariates}
+```{r usage_covariates_}
 library(plotATLAS)
 
 # Assign path to the input file e.g path = "path/to/folder/ATLAS_data_RGInfo.json"
@@ -83,8 +86,12 @@ plot_SeqError_covariate(path,i,1);
 }
 ```
 ### Plot BAMDiagnostic Histograms
-```{r usage BAMDiagnostics}
+```{r, warnings=FALSE, usage_BAMDiagnostics_}
 library(plotATLAS)
+# Assign path to the directory with input files e.g path = "path/to/folder/Bamdiagnostic"
+path <- list_example_folder()
+plot_BAMdiagnostic(path, output_directory_name = getwd())
+
 
 ```
 

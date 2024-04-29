@@ -4,12 +4,14 @@
 \alias{.plotBAMdiagnosticMultiple}
 \title{Plot data for multiple samples}
 \usage{
-.plotBAMdiagnosticMultiple(data, title)
+.plotBAMdiagnosticMultiple(data, title, directory_name)
 }
 \arguments{
 \item{data}{Data to be plotted}
 
 \item{title}{Title for the plot}
+
+\item{directory_name}{Path to the output directory.}
 }
 \value{
 Plots with data for allReadGroups for all the samples

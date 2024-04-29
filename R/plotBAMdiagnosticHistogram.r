@@ -1,3 +1,4 @@
+
 #' Generic function plot data with "BAMdiagnostics" class
 #'
 #' @param data Data to plot that has "BAMDiagnostics" class.
@@ -15,10 +16,6 @@ plotBAMdiagnostic <- function(data, ...){
 #'
 #' @return Names unique to each sample.
 #'
-#' @examples
-#' input_folder <- list_example_folder()
-#' data <- BAMdiagnostic(input_folder)
-#' Unique_filenames = .getFileNames(data)
 .getFileNames <- function(list_of_dataframes) {
   # Create an empty vector to store file names
   file_names=c()
@@ -56,8 +53,10 @@ plotBAMdiagnostic <- function(data, ...){
 
   # Called by .plotBAMdiagnosticMultiple function
 
+
   if (length(dataframe_list) > 0 && any(grepl("fragmentLengthHistogram\\.txt$", names(dataframe_list)))) {
     new_df <- data.frame(readGroup = character(), fragmentLength = numeric(), count = numeric(), stringsAsFactors = FALSE)
+
   }else if (length(dataframe_list) > 0 && any(grepl("mappingQualityHistogram\\.txt$", names(dataframe_list)))) {
     new_df <- data.frame(readGroup = character(), mappingQuality = numeric(), count = numeric(), stringsAsFactors = FALSE)
   }else if (length(dataframe_list) > 0 && any(grepl("alignedLengthHistogram\\.txt$", names(dataframe_list)))) {
@@ -95,6 +94,9 @@ plotBAMdiagnostic <- function(data, ...){
 #' @param log_scale y-axis scale is log10. At the moment this is the only option.
 #' @param ... Additional parameters (optional)
 #'
+#' @import ggplot2
+#' @importFrom rlang sym
+#'
 #' @return Plot for the Input data
 .plotBAMdiagnosticSingle <-  function(data,title,log_scale =TRUE,...){
   # TODO: add option for no log_transformation
@@ -103,34 +105,33 @@ plotBAMdiagnostic <- function(data, ...){
   column2Name <- colnames(data)[2]
 
   # If there is only one sample plot the value for individual ReadGroups
-  if (length(read_groups) < 3){
-    plot=ggplot(subset(data, readGroup == "allReadGroups"), aes(x = !!sym(column2Name), y = count,fill = readGroup)) +
+  if (length(read_groups) < 3 && "allReadGroups" %in% read_groups){
+    plot_1 = ggplot2::ggplot(subset(data, readGroup == "allReadGroups"), aes(x = !!sym(column2Name), y = count,fill = readGroup)) +
       geom_bar(stat = "identity", position = "dodge",alpha = 0.3) +
       geom_density(stat="identity", alpha = 0.02,aes(color = readGroup), linewidth = 0.2)   +
-      labs(title = paste(str_to_title(column2Name) ,title ), x = str_to_title(column2Name), y = "log10 Count") +
+      labs(title = paste(stringr::str_to_title(column2Name) ,title ), x = stringr::str_to_title(column2Name), y = "log10 Count") +
       theme_minimal() +
       scale_y_log10() +
       theme(plot.title = element_text(hjust = 0.5),
             legend.position = "right",
             legend.title = element_blank())
+    #plot(plot_1)
 
-  }
-  else{
+  } else {
 
     # If there are multiple samples plot the data for allReadGroups
-    plot=ggplot(data, aes(x = !!sym(column2Name) , y = count, fill = readGroup)) +
+    plot_1 = ggplot2::ggplot(data, aes(x = !!sym(column2Name) , y = count, fill = readGroup)) +
       geom_bar(stat = "identity", position = "dodge",alpha = 0.3) +
-      geom_density(stat="identity", alpha = 0.02,aes(color = readGroup), linewidth = 0.2)   +
-      labs(title = paste(str_to_title(column2Name) ,title), x = str_to_title(column2Name), y = "log10 Count") +
+      geom_density(stat="identity", alpha = 0.02, aes(color = readGroup), linewidth = 0.2)   +
+      labs(title = paste(stringr::str_to_title(column2Name) ,title), x = stringr::str_to_title(column2Name), y = "log10 Count") +
       theme_minimal() +
       scale_y_continuous(trans='log10') +
-
       theme(plot.title = element_text(hjust = 0.5),
             legend.position = "right",
             legend.title = element_blank())
-
+    #plot(plot_1)
   }
-  return(plot)
+  return(plot_1)
 }
 
 
@@ -139,21 +140,19 @@ plotBAMdiagnostic <- function(data, ...){
 #'
 #' @param data Data to be plotted
 #' @param title Title for the plot
+#' @param directory_name Path to the output directory.
+#'
+#' @importFrom grDevices dev.off pdf
 #'
 #' @return Plots with data for allReadGroups for all the samples
-.plotBAMdiagnosticMultiple <- function(data,title) {
-
-  file_names <- names(data)
-  directory_name <- unique(dirname(file_names))
-  directory_name <- min(directory_name)
-  # Creates a directory named plots within the directory where the input files are
-  # to store the plots
-  directory_name <- paste0(directory_name,"/plots")
+.plotBAMdiagnosticMultiple <- function(data,title,directory_name) {
 
   if (!dir.exists(directory_name)) {
     dir.create(directory_name)
   }
-
+  file_names <- names(data)
+  # Create an empty_list
+  plot_list <- list()
   # Create a plot for each type of data from multiple samples
   fragmentLengthHistogram <- data[grep(paste0("fragmentLengthHistogram.txt", "$"), file_names)]
   alignedLengthHistogram<- data[grep(paste0("alignedLengthHistogram.txt", "$"), file_names)]
@@ -161,81 +160,122 @@ plotBAMdiagnostic <- function(data, ...){
   readLengthHistogram<- data[grep(paste0("readLengthHistogram.txt", "$"), file_names)]
   softClippedLengthHistogram<- data[grep(paste0("softClippedLengthHistogram.txt", "$"), file_names)]
 
-  pdf(paste0(directory_name,"/bamdiagnostic_plot_multiple.pdf")) # Open a PDF file
-  data = .merge_and_store_data(fragmentLengthHistogram)
-  plot= .plotBAMdiagnosticSingle(data,title)
-  plot(plot)
-  plot_file_path <- paste0(directory_name,"/fragmentLengthHistogram", "_plot.png")  # Define plot file path
-  ggsave(plot_file_path, plot, device = "png")
+  dataframe_lists <- list()
 
-  data = .merge_and_store_data(alignedLengthHistogram)
-  plot= .plotBAMdiagnosticSingle(data,title)
-  plot(plot)
-  plot_file_path <- paste0(directory_name,"/alignedLengthHistogram", "_plot.png")  # Define plot file path
-  ggsave(plot_file_path, plot, device = "png")
+  if (length(fragmentLengthHistogram) >= 1) {
+    dataframe_lists <- append(dataframe_lists, list(fragmentLengthHistogram))
+  }
+  if (length(alignedLengthHistogram) >= 1) {
+    dataframe_lists <- append(dataframe_lists, list(alignedLengthHistogram))
+  }
+  if (length(mappingQualityHistogram) >= 1) {
+    dataframe_lists <- append(dataframe_lists, list(mappingQualityHistogram))
+  }
+  if (length(readLengthHistogram) >= 1) {
+    dataframe_lists <- append(dataframe_lists, list(readLengthHistogram))
+  }
+  if (length(softClippedLengthHistogram) >= 1) {
+    dataframe_lists <- append(dataframe_lists, list(softClippedLengthHistogram))
+  }
+  plots = list()
 
-  data = .merge_and_store_data(mappingQualityHistogram)
-  plot = .plotBAMdiagnosticSingle(data,title)
-  plot(plot)
-  plot_file_path <- paste0(directory_name,"/mappingQualityHistogram", "_plot.png")  # Define plot file path
-  ggsave(plot_file_path, plot, device = "png")
+  for (i in dataframe_lists){
 
-  data = .merge_and_store_data(readLengthHistogram)
-  plot = .plotBAMdiagnosticSingle(data,title)
-  plot(plot)
-  plot_file_path <- paste0(directory_name,"/readLengthHistogram", "_plot.png")  # Define plot file path
-  ggsave(plot_file_path, plot, device = "png")
+    data = .merge_and_store_data(i)
+    #.plotBAMdiagnosticSingle(data,title)
+    plot = .plotBAMdiagnosticSingle(data,title)
+    #plot(plot)
+    plot_list <-  append(plot_list, list(plot))
+  }
 
-  data = .merge_and_store_data(softClippedLengthHistogram)
-  plot = .plotBAMdiagnosticSingle(data,title)
-  plot(plot)
-  plot_file_path <- paste0(directory_name,"/softClippedLengthHistogram", "_plot.png")  # Define plot file path
-  ggsave(plot_file_path, plot, device = "png")
-  dev.off()  # Close PDF device
+
+  # Open a PDF file
+  #pdf(paste0(directory_name,"/bamdiagnostic_plot_multiple.pdf"))
+  #for (plot in plot_list){
+  #  plot(plot)
+  #}
+  # Close PDF device
+  #dev.off()
+  return(plot_list)
 }
 
 
 ################################################################################
 #' Function takes data objects with "BAMdiagnostic" class and plots the data
 #'
-#' @param data Data to be plotted
+#' @param data Data to be plotted.
+#' @param directory_name Path to the output directory.
 #' @param ... Additional parameters (optional).
+#' @importFrom grDevices dev.off pdf
+#' @importFrom utils read.table
+#'
 #'
 #' @return Plots of the input data.
-#' @export
-plotBAMdiagnostic.BAMdiagnostic <-function(data,...){
+plotBAMdiagnostic.BAMdiagnostic <-function(data,directory_name=NULL,...){
   Unique_filenames = .getFileNames(data)
-  directory_name <- unique(dirname(Unique_filenames))
-  directory_name <- min(directory_name)
+  if (is.null(directory_name)){
+    directory_name <- unique(dirname(Unique_filenames))
+    directory_name <- min(directory_name)
 
-  directory_name <- paste0(directory_name,"/plots")
-
+    directory_name <- paste0(directory_name,"/plots")
+  }
   if (!dir.exists(directory_name)) {
     dir.create(directory_name)
   }
 
   if (length(Unique_filenames)==1){
     # Open PDF device
-    pdf(paste0(directory_name,"/bamdiagnostic_plot_single.pdf"))
+    #pdf(paste0(directory_name,"/bamdiagnostic_plot_single.pdf"))
     title <- "Count by Read Group"
-
     for (file in names(data)){
       data = read.table(file,header = TRUE)
       plot <- .plotBAMdiagnosticSingle(data,title)
-      plot(plot)
+      #plot <- .plotBAMdiagnosticSingle(data,title)
+      #file_name <- tools::file_path_sans_ext(basename(file))  # Extract file name without extension
+      #plot_file_path <- paste0(directory_name,"/",file_name, "_plot.png")
 
-      file_name <- tools::file_path_sans_ext(basename(file))  # Extract file name without extension
-      plot_file_path <- paste0(directory_name,"/",file_name, "_plot.png")
-
-      ggsave(plot_file_path, plot, device = "png")
+      #ggsave(plot_file_path, plot, device = "png")
 
     }
-    dev.off()  # Close pdf device
+    #return(plot)
+    #dev.off()  # Close pdf device
   }
   else{
     title <- "Count by Sample"
+    #.plotBAMdiagnosticMultiple(data,title,directory_name)
+    plot <- .plotBAMdiagnosticMultiple(data,title,directory_name)
+    #plot <-.plotBAMdiagnosticMultiple(data,title,directory_name)
 
-    plot <-.plotBAMdiagnosticMultiple(data,title)
+    #return(plot)
+  }
+  return(plot)
+}
+###################################################################
+
+#' Function to plot BAMDiagnostic histograms
+#'
+#' @param input_path Path to the folder with all BAM diagnostic *_histogram.txt files
+#' @param recursive bool: To plot data from subfolders within the input folder path or not.
+#' @param output_directory_name : Path to an output directory. Default is the input_path.
+#' A plots folder will be created in the default output directory to store the plots.
+#' @param ... Additional parameters. Optional.
+#'
+#' @return pdf and png images of the histograms
+#' @export
+#'
+#' @examples
+#' input_path <- list_example_folder()
+#' plot_BAMdiagnostic(input_path, output_directory_name = getwd())
+plot_BAMdiagnostic <- function(input_path,recursive = TRUE, output_directory_name=getwd(),...){
+  data <-suppressWarnings(BAMdiagnostic(input_path,recursive))
+
+  plots = plotBAMdiagnostic(data = data,directory_name = output_directory_name, ...)
+  pdf("./BAMdiagnostic.pdf")
+  for (plot in plots){
+    print(plot)
 
   }
-}
+
+  dev.off()
+  }
+

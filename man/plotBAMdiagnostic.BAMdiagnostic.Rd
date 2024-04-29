@@ -4,10 +4,12 @@
 \alias{plotBAMdiagnostic.BAMdiagnostic}
 \title{Function takes data objects with "BAMdiagnostic" class and plots the data}
 \usage{
-\method{plotBAMdiagnostic}{BAMdiagnostic}(data, ...)
+\method{plotBAMdiagnostic}{BAMdiagnostic}(data, directory_name = NULL, ...)
 }
 \arguments{
-\item{data}{Data to be plotted}
+\item{data}{Data to be plotted.}
+
+\item{directory_name}{Path to the output directory.}
 
 \item{...}{Additional parameters (optional).}
 }

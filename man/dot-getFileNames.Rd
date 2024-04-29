@@ -17,8 +17,3 @@ Names unique to each sample.
 Function to extract unique part from the name of each dataframe from a list of
 dataframes
 }
-\examples{
-input_folder <- list_example_folder()
-data <- BAMdiagnostic(input_folder)
-Unique_filenames = .getFileNames(data)
-}
