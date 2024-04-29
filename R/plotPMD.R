@@ -213,9 +213,9 @@ plot_PMD <-function(path, side = "both",
                     readGroups = c(),
                     ...){
   info <-CreateClassRGInfo(path,readGroups)
-  pdf("./pmd.pdf")
+
   plotPMD(info,side,rg_no,legend,xlim,ylim,multiPannel,xlab,ylab,main,...)
-  dev.off()
+
 }
 
 

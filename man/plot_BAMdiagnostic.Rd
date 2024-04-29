@@ -7,7 +7,7 @@
 plot_BAMdiagnostic(
   input_path,
   recursive = TRUE,
-  output_directory_name = getwd(),
+  output_directory_name = NULL,
   ...
 )
 }
@@ -16,8 +16,8 @@ plot_BAMdiagnostic(
 
 \item{recursive}{bool: To plot data from subfolders within the input folder path or not.}
 
-\item{output_directory_name}{: Path to an output directory. Default is the input_path.
-A plots folder will be created in the default output directory to store the plots.}
+\item{output_directory_name}{: Path to an output directory. Default is NULL and plots will
+only be displayed not saved.}
 
 \item{...}{Additional parameters. Optional.}
 }
@@ -29,5 +29,6 @@ Function to plot BAMDiagnostic histograms
 }
 \examples{
 input_path <- list_example_folder()
-plot_BAMdiagnostic(input_path, output_directory_name = getwd())
+plot_BAMdiagnostic(input_path, recursive = TRUE, output_directory_name = getwd())
+plot_BAMdiagnostic(input_path, recursive = TRUE)
 }

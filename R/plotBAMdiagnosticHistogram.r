@@ -115,7 +115,7 @@ plotBAMdiagnostic <- function(data, ...){
       theme(plot.title = element_text(hjust = 0.5),
             legend.position = "right",
             legend.title = element_blank())
-    #plot(plot_1)
+    plot(plot_1)
 
   } else {
 
@@ -129,7 +129,7 @@ plotBAMdiagnostic <- function(data, ...){
       theme(plot.title = element_text(hjust = 0.5),
             legend.position = "right",
             legend.title = element_blank())
-    #plot(plot_1)
+    plot(plot_1)
   }
   return(plot_1)
 }
@@ -256,8 +256,9 @@ plotBAMdiagnostic.BAMdiagnostic <-function(data,directory_name=NULL,...){
 #'
 #' @param input_path Path to the folder with all BAM diagnostic *_histogram.txt files
 #' @param recursive bool: To plot data from subfolders within the input folder path or not.
-#' @param output_directory_name : Path to an output directory. Default is the input_path.
-#' A plots folder will be created in the default output directory to store the plots.
+#' @param output_directory_name : Path to an output directory. Default is NULL and plots will
+#' only be displayed not saved.
+#'
 #' @param ... Additional parameters. Optional.
 #'
 #' @return pdf and png images of the histograms
@@ -265,17 +266,21 @@ plotBAMdiagnostic.BAMdiagnostic <-function(data,directory_name=NULL,...){
 #'
 #' @examples
 #' input_path <- list_example_folder()
-#' plot_BAMdiagnostic(input_path, output_directory_name = getwd())
-plot_BAMdiagnostic <- function(input_path,recursive = TRUE, output_directory_name=getwd(),...){
+#' plot_BAMdiagnostic(input_path, recursive = TRUE, output_directory_name = getwd())
+#' plot_BAMdiagnostic(input_path, recursive = TRUE)
+plot_BAMdiagnostic <- function(input_path,recursive = TRUE, output_directory_name=NULL,...){
   data <-suppressWarnings(BAMdiagnostic(input_path,recursive))
 
   plots = plotBAMdiagnostic(data = data,directory_name = output_directory_name, ...)
-  pdf("./BAMdiagnostic.pdf")
+
+  if(!is.null(output_directory_name)){
+  pdf(paste0(output_directory_name,"/BAMdiagnostic.pdf"))
   for (plot in plots){
     print(plot)
 
   }
 
   dev.off()
+  }
   }
 

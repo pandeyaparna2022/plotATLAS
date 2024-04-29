@@ -60,15 +60,21 @@ side = 5
 
 # plot PMD
 plot_PMD(path, side, readGroups=readGroups)
-#> png 
-#>   2
-plot_PMD(path, readGroups=readGroups)
-#> png 
-#>   2
-plot_PMD(path)
-#> png 
-#>   2
 ```
+
+<img src="man/figures/README_usage_PMD_-1.png" width="100%" />
+
+``` r
+plot_PMD(path, readGroups=readGroups)
+```
+
+<img src="man/figures/README_usage_PMD_-2.png" width="100%" />
+
+``` r
+plot_PMD(path)
+```
+
+<img src="man/figures/README_usage_PMD_-3.png" width="100%" />
 
 ### Plot Sequencing Error Covariates
 
@@ -99,4 +105,7 @@ plot_BAMdiagnostic(path, output_directory_name = getwd())
 #> [1] "C:\\Users\\pandapar\\AppData\\Local\\R\\win-library\\4.4\\plotATLAS\\extdata/modern_2_fragmentLengthHistogram.txt"
 ```
 
-<img src="man/figures/README_usage_BAMDiagnostics_-1.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-2.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-3.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-4.png" width="100%" />
+<img src="man/figures/README_usage_BAMDiagnostics_-1.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-2.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-3.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-4.png" width="100%" /><img src="man/figures/README_usage_BAMDiagnostics_-5.png" width="100%" />
+
+    #> png 
+    #>   2
